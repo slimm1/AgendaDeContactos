@@ -1,23 +1,26 @@
 package controller;
 
+import model.Contact;
+
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.HashSet;
 
 public class Control {
     public void alta(){
-        
+
     }
-    public String readFile(File file){
+    public HashSet<Contact> readFile(File file){
         try{
-            BufferedReader input = new BufferedReader(new FileReader(file));
-            StringBuilder txt = new StringBuilder();
-            String line = input.readLine();
-            while(line!=null){
-                txt.append(line);
-                txt.append("\n");
-                line = input.readLine();
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
+            HashSet <Contact> contactList = new HashSet<>();
+            Contact newContact = (Contact) input.readObject();
+            while(newContact!=null){
+                contactList.add(newContact);
+                newContact = (Contact) input.readObject();
             }
             input.close();
-            return txt.toString();
+            return contactList;
         }
         catch(FileNotFoundException fEx){
             System.out.println("ERROR  F " + fEx.getMessage());
@@ -27,12 +30,18 @@ public class Control {
             System.out.println("ERROR  I " + ioEx.getMessage());
             return null;
         }
+        catch(ClassNotFoundException cEx){
+            System.out.println("ERROR C " + cEx.getMessage());
+            return null;
+        }
     }
-    public void rewriteFile(File file, String newTxt){
+    public void rewriteFile(File file, HashSet<Contact> contactList){
         try {
-            FileWriter fw = new FileWriter(file);
-            fw.write(newTxt);
-            fw.close();
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
+            for(Contact c:contactList){
+                output.writeObject(c);
+            }
+            output.close();
         } catch (IOException e) {
             System.out.println("ERROR I " + e.getMessage());;
         }
