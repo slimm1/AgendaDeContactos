@@ -1,7 +1,7 @@
 package model;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Contact implements Comparable<Contact>, Serializable {

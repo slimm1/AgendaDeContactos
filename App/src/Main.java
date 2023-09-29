@@ -1,6 +1,8 @@
+import controller.Control;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Control c = new Control();
+        System.out.println(c.listContacts());
     }
-
 }
