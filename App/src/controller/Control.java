@@ -24,9 +24,15 @@ public class Control {
     public boolean addContact(String name, int number){
         return bufferList.add(new Contact(name, number));
     }
-    public boolean removeContact(String name){
+    public void removeContact(String name){
         Contact c = getContactByName(name);
-        return bufferList.remove(c);
+        if(c != null){
+            bufferList.remove(c);
+            System.out.println("Contacto borrado con éxito!");
+        }
+        else{
+            System.out.println("El contacto introducido no existe!");
+        }
     }
     public boolean modifyName(String name, String newName){
         Contact c = getContactByName(name);
