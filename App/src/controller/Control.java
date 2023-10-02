@@ -1,6 +1,5 @@
 package controller;
 
-import com.sun.security.jgss.GSSUtil;
 import model.Contact;
 
 import java.io.*;
@@ -9,8 +8,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.TreeSet;
 public class Control {
     private TreeSet<Contact> bufferList, original;
-    private final File inputFile = new File("./../files/contacts.txt");
-    public Control(){
+    private final File inputFile;
+    public Control(String path){
+        inputFile = new File(path);
         if(readFile()==null){
             System.out.println("new set initializated");
             bufferList = new TreeSet<>();
@@ -21,27 +21,42 @@ public class Control {
             original = readFile();
         }
     }
-    public void addContact(String name, int number){
-        bufferList.add(new Contact(name, number));
+    public boolean addContact(String name, int number){
+        return bufferList.add(new Contact(name, number));
     }
-    public void removeContact(String name){
+    public boolean removeContact(String name){
+        Contact c = getContactByName(name);
+        return bufferList.remove(c);
+    }
+    public boolean modifyName(String name, String newName){
         Contact c = getContactByName(name);
         if(c != null){
-            bufferList.remove(c);
+            if(c.getName().equalsIgnoreCase(newName)){
+                System.out.println("El nombre introducido coincide con el registrado");
+                return false;
+            }
+            else{
+                c.setName(newName);
+                System.out.println("El nombre ha sido modificado con éxito");
+                return true;
+            }
         }
-        else{
-            System.out.println("El contacto introducido no figura en la lista!");
-        }
+        return false;
     }
-    public void modifyContact(String name, String newName, int newNumber){
+    public boolean modifyNumber(String name, int newNumber){
         Contact c = getContactByName(name);
         if(c != null){
-            c.setName(newName);
-            c.setNumber(newNumber);
+            if(c.getNumber()==newNumber){
+                System.out.println("El teléfono introducido coincide con el registrado");
+                return false;
+            }
+            else{
+                c.setNumber(newNumber);
+                System.out.println("El teléfono ha sido modificado con éxito");
+                return true;
+            }
         }
-        else{
-            System.out.println("El contacto introducido no figura en la lista!");
-        }
+        return false;
     }
     public String listContacts(){
         StringBuilder out = new StringBuilder();
@@ -65,7 +80,7 @@ public class Control {
         }
         return null;
     }
-    public String getDateTime(){
+    private String getDateTime(){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddLLLuuuu-HH.mm.ss"));
     }
     private TreeSet<Contact> readFile(){
