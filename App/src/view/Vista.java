@@ -5,10 +5,10 @@ import controller.Control;
 import java.util.Scanner;
 public class Vista {
 
-    private Control controlador;
+    private Control controller;
     private Scanner scanner;
-    public Vista(Control controlador){
-        this.controlador=controlador;
+    public Vista(Control controller){
+        this.controller=controller;
         scanner = new Scanner(System.in);
     }
     public void menu(){
@@ -24,45 +24,60 @@ public class Vista {
         do{
             menu();
             System.out.println("Elija una opción");
-            opcion = Integer.parseInt(scanner.nextLine());
+            opcion = checkAnswer(scanner.nextLine());
+            while(opcion>6){
+                System.out.println("Por favor, Introduce una opción válida:");
+                opcion = checkAnswer(scanner.nextLine());
+            }
+            String name;
             switch (opcion){
                 case 1:
                     System.out.println("Introduce el nombre del nuevo contacto: ");
-                    String nombre = scanner.nextLine();
+                    name = scanner.nextLine();
                     System.out.println("Introduce el numero de telefono del nuevo contacto: ");
-                    int numero = Integer.parseInt(scanner.nextLine());
-                    controlador.addContact(nombre,numero);
+                    int number = checkPhoneNumber(scanner.nextLine());
+                    controller.addContact(name,number);
                     break;
                 case 2:
                     int answer;
                     System.out.println("Introduce el nombre del contacto!!:");
-                    String nombreActualizar = scanner.nextLine();
+                    name = scanner.nextLine();
                     System.out.println("¿Qué quieres modificar?:");
                     System.out.println("1.- nombre");
                     System.out.println("2.- telefono");
-                    answer = Integer.parseInt(scanner.nextLine());
+                    System.out.println("-- cualquier otro para volver");
+                    answer = checkAnswer(scanner.nextLine());
                     if(answer==1){
                         System.out.println("Introduce el nuevo nombre:");
                         String newName = scanner.nextLine();
-                        controlador.modifyName(nombreActualizar,newName);
+                        if(controller.modifyName(name,newName)){
+                            System.out.println("Nombre modificado con exito!");
+                        }
+                        else{
+                            System.out.println("Nombre de contacto --> " + name + " no figura en la lista");
+                        }
                     }
                     else if(answer == 2){
                         System.out.println("Introduce el nuevo telefono:");
-                        int newNumber = Integer.parseInt(scanner.nextLine());
-                        controlador.modifyNumber(nombreActualizar,newNumber);
+                        int newNumber = checkPhoneNumber(scanner.nextLine());
+                        if(controller.modifyNumber(name,newNumber)){
+                            System.out.println("Nombre modificado con exito!");
+                        }
+                        else{
+                            System.out.println("Nombre de contacto --> " + name + " no figura en la lista");
+                        }
                     }
                     break;
                 case 3:
                     System.out.println("Introduce el nombre del contacto para borrarlo !");
-                    String nombreBorrar = scanner.nextLine();
-                    controlador.removeContact(nombreBorrar);
+                    name = scanner.nextLine();
+                    controller.removeContact(name);
                     break;
                 case 4:
-                    System.out.println(controlador.listContacts());
+                    System.out.println(controller.listContacts());
                     break;
                 case 5:
-                    System.out.println("Los cambios se han guardado, ADIOS");
-                    controlador.saveChanges();
+                    controller.saveChanges();
                     break;
                 case 6:
                     System.out.println("ADIOS");
@@ -71,5 +86,20 @@ public class Vista {
                     System.out.println("Opcion no valida");
             }
         }while (opcion<5);
+    }
+    public int checkPhoneNumber(String number){
+        while(!number.matches("\\d{9}")){
+            System.out.println("El teléfono proporcionado es incorrecto");
+            System.out.println("Introduce un teléfono válido:");
+            number = scanner.nextLine();
+        }
+        return Integer.parseInt(number);
+    }
+    public int checkAnswer(String answer){
+        while(!answer.matches("\\d")){
+            System.out.println("Por favor, Introduce una opción válida:");
+            answer = scanner.nextLine();
+        }
+        return Integer.parseInt(answer);
     }
 }

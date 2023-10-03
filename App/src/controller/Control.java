@@ -21,17 +21,23 @@ public class Control {
             original = readFile();
         }
     }
-    public boolean addContact(String name, int number){
-        return bufferList.add(new Contact(name, number));
+    public void addContact(String name, int number){
+        if(getContactByName(name) == null){
+            bufferList.add(new Contact(name, number));
+            System.out.println("Contacto " + name + " creado con éxito!");
+        }
+        else{
+            System.out.println("Ya hay un contacto registrado con el nombre --> " + name);
+        }
     }
     public void removeContact(String name){
         Contact c = getContactByName(name);
         if(c != null){
             bufferList.remove(c);
-            System.out.println("Contacto borrado con éxito!");
+            System.out.println("Contacto " + name + " borrado con éxito!");
         }
         else{
-            System.out.println("El contacto introducido no existe!");
+            System.out.println("El contacto " + name + " no existe en el sistema!");
         }
     }
     public boolean modifyName(String name, String newName){
@@ -74,9 +80,15 @@ public class Control {
     }
     //revisar routing de ficheros
     public void saveChanges(){
-        System.out.println(new File("../files/versions").mkdir()?"created new versions dir":"versions dir already exists");
-        rewriteFile(new File("../files/versions/"+getDateTime()+inputFile.getName()), original);
-        rewriteFile(new File(inputFile.getPath()), bufferList);
+        if(bufferList.equals(original)){
+            System.out.println("No hay cambios que guardar");
+        }
+        else{
+            System.out.println(new File("../files/versions").mkdir()?"created new versions dir":"versions dir already exists");
+            rewriteFile(new File("../files/versions/"+getDateTime()+inputFile.getName()), original);
+            rewriteFile(new File(inputFile.getPath()), bufferList);
+            System.out.println("Los cambios se han guardado, ADIOS");
+        }
     }
     private Contact getContactByName(String name){
         for(Contact c:bufferList){

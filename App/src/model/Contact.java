@@ -16,7 +16,6 @@ public class Contact implements Comparable<Contact>, Serializable {
         return number;
     }
 
-
     public String getName() {
         return name;
     }
