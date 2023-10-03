@@ -10,9 +10,9 @@ public class Control {
     private TreeSet<Contact> bufferList, original;
     private final File inputFile;
     public Control(String path){
-        inputFile = new File(path);
+        inputFile = checkRouting(new File(path));
         if(readFile()==null){
-            System.out.println("new set initializated");
+            System.out.println("new set initialized");
             bufferList = new TreeSet<>();
             original = new TreeSet<>();
         }
@@ -78,14 +78,13 @@ public class Control {
         }
         return out.toString();
     }
-    //revisar routing de ficheros
     public void saveChanges(){
         if(bufferList.equals(original)){
-            System.out.println("No hay cambios que guardar");
+            System.out.println("No hay cambios que guardar, ADIOS");
         }
         else{
             System.out.println(new File("../files/versions").mkdir()?"created new versions dir":"versions dir already exists");
-            rewriteFile(new File("../files/versions/"+getDateTime()+inputFile.getName()), original);
+            rewriteFile(new File("../files/versions/"+getDateTime()), original);
             rewriteFile(new File(inputFile.getPath()), bufferList);
             System.out.println("Los cambios se han guardado, ADIOS");
         }
@@ -130,5 +129,18 @@ public class Control {
         } catch (IOException e) {
             System.out.println("ERROR I salida " + e.getMessage());;
         }
+    }
+    private File checkRouting(File routing){
+        if(!routing.exists()){
+            routing = new File("../files/contacts.txt");
+            try {
+                System.out.println("Ruta de entrada de datos extraña. Intentando crear fichero en --> " + routing.getPath());
+                System.out.println(routing.createNewFile()?"Un fichero vacío se ha creado con éxito": "Ya existe un fichero contacts.txt!!\nDatos cargados");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return routing;
+        }
+        return routing;
     }
 }
