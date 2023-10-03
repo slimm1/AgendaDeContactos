@@ -33,7 +33,7 @@ public class Control {
     public void removeContact(String name){
         Contact c = getContactByName(name);
         if(c != null){
-            bufferList.remove(c);
+            System.out.println(bufferList.remove(c));
             System.out.println("Contacto " + name + " borrado con éxito!");
         }
         else{
@@ -84,7 +84,7 @@ public class Control {
         }
         else{
             System.out.println(new File("../files/versions").mkdir()?"created new versions dir":"versions dir already exists");
-            rewriteFile(new File("../files/versions/"+getDateTime()), original);
+            rewriteFile(new File("../files/versions/"+getDateTime()+".txt"), original);
             rewriteFile(new File(inputFile.getPath()), bufferList);
             System.out.println("Los cambios se han guardado, ADIOS");
         }

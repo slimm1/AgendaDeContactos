@@ -4,7 +4,6 @@ import controller.Control;
 
 import java.util.Scanner;
 public class Vista {
-
     private Control controller;
     private Scanner scanner;
     public Vista(Control controller){
@@ -88,6 +87,7 @@ public class Vista {
         }while (opcion<5);
     }
     public int checkPhoneNumber(String number){
+        //nueve digitos positivos
         while(!number.matches("\\d+${9}")){
             System.out.println("El teléfono proporcionado es incorrecto");
             System.out.println("Introduce un teléfono válido:");
@@ -96,6 +96,7 @@ public class Vista {
         return Integer.parseInt(number);
     }
     public int checkAnswer(String answer){
+        //digitos positivos
         while(!answer.matches("\\d+$")){
             System.out.println("Por favor, Introduce una opción válida:");
             answer = scanner.nextLine();
