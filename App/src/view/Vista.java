@@ -88,7 +88,7 @@ public class Vista {
         }while (opcion<5);
     }
     public int checkPhoneNumber(String number){
-        while(!number.matches("\\d{9}")){
+        while(!number.matches("\\d+${9}")){
             System.out.println("El teléfono proporcionado es incorrecto");
             System.out.println("Introduce un teléfono válido:");
             number = scanner.nextLine();
@@ -96,7 +96,7 @@ public class Vista {
         return Integer.parseInt(number);
     }
     public int checkAnswer(String answer){
-        while(!answer.matches("\\d")){
+        while(!answer.matches("\\d+$")){
             System.out.println("Por favor, Introduce una opción válida:");
             answer = scanner.nextLine();
         }
